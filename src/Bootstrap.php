@@ -22,8 +22,10 @@ $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
 // use FastRoute to handle the route
 // Bootstrap is just responsible for showing the response
 $dispatcher = simpleDispatcher(function(RouteCollector $r) {
-    $r->addRoute('GET', '/', FrontPageController::class . '#show');
-    $r->addRoute('GET', '/submit', SubmissionController::class . '#show');
+    $routes = include(ROOT_DIR . '/src/Routes.php');
+    foreach ($routes as $route) {
+        $r->addRoute(...$route);
+    }
 });
 
 $routeInfo = $dispatcher->dispatch(
