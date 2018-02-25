@@ -13,12 +13,25 @@ use Twig_Loader_Filesystem;
  */
 final class TwigTemplateRendererFactory
 {
+    /** @var TemplateDirectory */
+    private $templateDirectory;
+
+    /**
+     * TwigTemplateRendererFactory constructor.
+     * @param TemplateDirectory $templateDirectory
+     */
+    public function __construct(TemplateDirectory $templateDirectory)
+    {
+        $this->templateDirectory = $templateDirectory;
+    }
+
     /**
      * @return TwigTemplateRenderer
      */
     public function create(): TwigTemplateRenderer
     {
-        $loader = new Twig_Loader_Filesystem([]);
+        $templateDirectory = $this->templateDirectory->toString();
+        $loader = new Twig_Loader_Filesystem([$templateDirectory]);
         $twigEnvironment = new Twig_Environment($loader);
 
         return new TwigTemplateRenderer($twigEnvironment);
