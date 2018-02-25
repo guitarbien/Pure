@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Framework\Rendering\TwigTemplateRendererFactory;
+use Auryn\Injector;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,11 +44,10 @@ switch ($routeInfo[0]) {
         [$controllerName, $method] = explode('#', $routeInfo[1]);
         $vars = $routeInfo[2];
 
-        // inject the template engine to the controller
-        $factory = new TwigTemplateRendererFactory();
-        $templateRenderer = $factory->create();
+        /** @var Injector $injector */
+        $injector = include(ROOT_DIR . '/src/Dependencies.php');
+        $controller = $injector->make($controllerName);
 
-        $controller = new $controllerName($templateRenderer);
         $response = $controller->$method($request, $vars);
         break;
 }
