@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-use App\FrontPage\Presentation\FrontPageController;
-use App\Submission\Presentation\SubmissionController;
+use App\Framework\Rendering\TwigTemplateRendererFactory;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
-use function FastRoute\simpleDispatcher;
 use Symfony\Component\HttpFoundation\Response;
+use function FastRoute\simpleDispatcher;
 
 define('ROOT_DIR', dirname(__DIR__));
 
@@ -44,7 +43,11 @@ switch ($routeInfo[0]) {
         [$controllerName, $method] = explode('#', $routeInfo[1]);
         $vars = $routeInfo[2];
 
-        $controller = new $controllerName;
+        // inject the template engine to the controller
+        $factory = new TwigTemplateRendererFactory();
+        $templateRenderer = $factory->create();
+
+        $controller = new $controllerName($templateRenderer);
         $response = $controller->$method($request, $vars);
         break;
 }
