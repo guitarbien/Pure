@@ -2,10 +2,10 @@
 
 {% block content %}
 <ol>
+    {% for submission in submissions %}
     <li>
-        <a href="http://google.com">Google</a>
+        <a href="{{ submission.url }}">{{ submission.title }}</a>
     </li>
-    <li>
-        <a href="http://bing.com">Bing</a></li>
+    {% endfor %}
 </ol>
 {% endblock %}
