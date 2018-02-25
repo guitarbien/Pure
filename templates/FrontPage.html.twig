@@ -4,7 +4,7 @@
 <ol>
     {% for submission in submissions %}
     <li>
-        <a href="{{ submission.url }}">{{ submission.title }}</a>
+        <a href="{{ submission.url|e('html_attr') }}">{{ submission.title }}</a>
     </li>
     {% endfor %}
 </ol>
