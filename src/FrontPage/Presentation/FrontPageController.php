@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\FrontPage\Presentation;
 
 use App\Framework\Rendering\TemplateRenderer;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -27,10 +26,9 @@ final class FrontPageController
     }
 
     /**
-     * @param Request $request
      * @return Response
      */
-    public function show(Request $request): Response
+    public function show(): Response
     {
         $content = $this->templateRenderer->render('FrontPage.html.twig');
 
