@@ -16,13 +16,18 @@ final class FrontPageController
     /** @var TemplateRenderer  */
     private $templateRenderer;
 
+    /** @var SubmissionsQuery */
+    private $submissionsQuery;
+
     /**
      * FrontPageController constructor.
-     * @param $templateRenderer
+     * @param TemplateRenderer $templateRenderer
+     * @param SubmissionsQuery $submissionQuery
      */
-    public function __construct(TemplateRenderer $templateRenderer)
+    public function __construct(TemplateRenderer $templateRenderer, SubmissionsQuery $submissionQuery)
     {
         $this->templateRenderer = $templateRenderer;
+        $this->submissionsQuery = $submissionQuery;
     }
 
     /**
@@ -30,13 +35,8 @@ final class FrontPageController
      */
     public function show(): Response
     {
-        $submissions = [
-            ['url' => 'http://google.com', 'title' => 'Google'],
-            ['url' => 'http://bing.com',   'title' => 'Bing'],
-        ];
-
         $content = $this->templateRenderer->render('FrontPage.html.twig', [
-            'submissions' => $submissions,
+            'submissions' => $this->submissionsQuery->execute(),
         ]);
 
         return new Response($content);
