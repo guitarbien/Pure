@@ -7,7 +7,7 @@ use App\Framework\Dbal\DatabaseUrl;
 use App\Framework\Rendering\TemplateDirectory;
 use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
-use App\FrontPage\Infrastructure\MockSubmissionQuery;
+use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Presentation\SubmissionsQuery;
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
@@ -27,7 +27,7 @@ $injector->delegate(TemplateRenderer::class, function() use($injector): Template
 //------------------
 // SubmissionsQuery
 //------------------
-$injector->alias(SubmissionsQuery::class, MockSubmissionQuery::class);
+$injector->alias(SubmissionsQuery::class, DbalSubmissionsQuery::class);
 
 // Use share() prevent the injector creating a new instance whenever an object is injected
 // The same instance of the object is reused for all classes that use this dependency.
