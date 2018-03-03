@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Migrations;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Class Migration201803032130
@@ -26,6 +28,24 @@ final class Migration201803032130
 
     public function migrate(): void
     {
+        $schema = new Schema();
+        $this->createSubmissionsTable($schema);
 
+        $queries = $schema->toSql($this->connection->getDatabasePlatform());
+        foreach ($queries as $query) {
+            $this->connection->executeQuery($query);
+        }
+    }
+
+    /**
+     * @param Schema $schema
+     */
+    private function createSubmissionsTable(Schema $schema): void
+    {
+        $table = $schema->createTable('submissions');
+        $table->addColumn('id', Type::GUID);
+        $table->addColumn('title', Type::STRING);
+        $table->addColumn('url', Type::STRING);
+        $table->addColumn('creation_date', Type::DATETIME);
     }
 }
