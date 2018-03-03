@@ -11,16 +11,19 @@ use Auryn\Injector;
 
 $injector = new Injector();
 
+//----------
+// Template
+//----------
 $injector->define(TemplateDirectory::class, [':rootDirectory' => ROOT_DIR]);
 
-$injector->delegate(
-    TemplateRenderer::class,
-    function() use($injector): TemplateRenderer {
-        $factory = $injector->make(TwigTemplateRendererFactory::class);
-        return $factory->create();
-    }
-);
+$injector->delegate(TemplateRenderer::class, function() use($injector): TemplateRenderer {
+    $factory = $injector->make(TwigTemplateRendererFactory::class);
+    return $factory->create();
+});
 
+//------------------
+// SubmissionsQuery
+//------------------
 $injector->alias(SubmissionsQuery::class, MockSubmissionQuery::class);
 
 // Use share() prevent the injector creating a new instance whenever an object is injected
