@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Submission\Presentation;
 
-use Symfony\Component\HttpFoundation\Request;
+use App\Framework\Rendering\TemplateRenderer;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -13,13 +13,24 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class SubmissionController
 {
+    /** @var TemplateRenderer */
+    private $templateRenderer;
+
     /**
-     * @param Request $request
+     * SubmissionController constructor.
+     * @param TemplateRenderer $templateRenderer
+     */
+    public function __construct(TemplateRenderer $templateRenderer)
+    {
+        $this->templateRenderer = $templateRenderer;
+    }
+
+    /**
      * @return Response
      */
-    public function show(Request $request): Response
+    public function show(): Response
     {
-        $content = 'Submission Controller';
+        $content = $this->templateRenderer->render('Submission.html.twig');
 
         return new Response($content);
     }
