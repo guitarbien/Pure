@@ -1,5 +1,6 @@
 {% extends'Layout.html.twig' %}
 {% block content %}
+    {% include 'FlashMessages.html.twig' %}
     <form method="post" action="">
         <label for="submission-title">Title</label>
         <input type="text" name="title" id="submission-title">
