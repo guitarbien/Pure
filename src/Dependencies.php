@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Framework\Csrf\SymfonySessionTokenStorage;
+use App\Framework\Csrf\TokenStorage;
 use App\Framework\Dbal\ConnectionFactory;
 use App\Framework\Dbal\DatabaseUrl;
 use App\Framework\Rendering\TemplateDirectory;
@@ -11,6 +13,8 @@ use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Presentation\SubmissionsQuery;
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $injector = new Injector();
 
@@ -44,5 +48,11 @@ $injector->delegate(Connection::class, function() use($injector): Connection {
 });
 
 $injector->share(Connection::class);
+
+//------------
+// CSRF Token
+//------------
+$injector->alias(TokenStorage::class, SymfonySessionTokenStorage::class);
+$injector->alias(SessionInterface::class, Session::class);
 
 return $injector;
