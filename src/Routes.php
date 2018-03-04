@@ -16,4 +16,9 @@ return [
         '/submit',
         SubmissionController::class . '#show'
     ],
+    [
+        'POST',
+        '/submit',
+        SubmissionController::class . '#submit'
+    ],
 ];
