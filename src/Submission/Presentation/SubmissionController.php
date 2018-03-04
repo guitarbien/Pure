@@ -6,11 +6,11 @@ namespace App\Submission\Presentation;
 
 use App\Framework\Csrf\StoredTokenValidator;
 use App\Framework\Csrf\Token;
+use App\Framework\MessageContainer\FlashMessenger;
 use App\Framework\Rendering\TemplateRenderer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class SubmissionController
@@ -24,23 +24,23 @@ final class SubmissionController
     /** @var StoredTokenValidator */
     private $storedTokenValidator;
 
-    /** @var Session */
-    private $session;
+    /** @var FlashMessenger */
+    private $flashMessenger;
 
     /**
      * SubmissionController constructor.
      * @param TemplateRenderer $templateRenderer
      * @param StoredTokenValidator $storedTokenValidator
-     * @param Session $session
+     * @param FlashMessenger $flashMessenger
      */
     public function __construct(
         TemplateRenderer $templateRenderer,
         StoredTokenValidator $storedTokenValidator,
-        Session $session
+        FlashMessenger $flashMessenger
     ) {
         $this->templateRenderer     = $templateRenderer;
         $this->storedTokenValidator = $storedTokenValidator;
-        $this->session              = $session;
+        $this->flashMessenger       = $flashMessenger;
     }
 
     /**
@@ -62,14 +62,14 @@ final class SubmissionController
         $response = new RedirectResponse('/submit');
 
         if (!$this->storedTokenValidator->validate('submission', new Token($request->get('token')))) {
-            $this->session->getFlashBag()->add('errors', 'Invalid token');
+            $this->flashMessenger->add('errors', 'Invalid token');
 
             return $response;
         }
 
         // save the submission
 
-        $this->session->getFlashBag()->add('success', 'Your URL was added successfully');
+        $this->flashMessenger->add('success', 'Your URL was added successfully');
 
         return $response;
     }
