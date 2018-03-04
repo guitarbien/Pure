@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Submission\Presentation;
 
+use App\Framework\Csrf\StoredTokenValidator;
 use App\Framework\Rendering\TemplateRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,13 +18,18 @@ final class SubmissionController
     /** @var TemplateRenderer */
     private $templateRenderer;
 
+    /** @var StoredTokenValidator */
+    private $storedTokenValidator;
+
     /**
      * SubmissionController constructor.
      * @param TemplateRenderer $templateRenderer
+     * @param StoredTokenValidator $storedTokenValidator
      */
-    public function __construct(TemplateRenderer $templateRenderer)
+    public function __construct(TemplateRenderer $templateRenderer, StoredTokenValidator $storedTokenValidator)
     {
-        $this->templateRenderer = $templateRenderer;
+        $this->templateRenderer     = $templateRenderer;
+        $this->storedTokenValidator = $storedTokenValidator;
     }
 
     /**
