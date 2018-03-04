@@ -15,4 +15,10 @@ interface FlashMessenger
      * @param string $value
      */
     public function add(string $key, string $value): void;
+
+    /**
+     * @param string $key
+     * @return array
+     */
+    public function get(string $key): array;
 }
