@@ -40,4 +40,13 @@ final class Token
 
         return new self($token);
     }
+
+    /**
+     * @param Token $token
+     * @return bool
+     */
+    public function equals(Token $token): bool
+    {
+        return $this->token === $token->toString();
+    }
 }
