@@ -6,6 +6,8 @@ use App\Framework\Csrf\SymfonySessionTokenStorage;
 use App\Framework\Csrf\TokenStorage;
 use App\Framework\Dbal\ConnectionFactory;
 use App\Framework\Dbal\DatabaseUrl;
+use App\Framework\MessageContainer\FlashMessenger;
+use App\Framework\MessageContainer\SymfonySessionFlashBag;
 use App\Framework\Rendering\TemplateDirectory;
 use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
@@ -54,5 +56,12 @@ $injector->share(Connection::class);
 //------------
 $injector->alias(TokenStorage::class, SymfonySessionTokenStorage::class);
 $injector->alias(SessionInterface::class, Session::class);
+
+
+//---------------
+// Flash Message
+//---------------
+$injector->alias(FlashMessenger::class, SymfonySessionFlashBag::class);
+$injector->share(FlashMessenger::class);
 
 return $injector;
