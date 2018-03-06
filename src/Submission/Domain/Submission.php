@@ -18,10 +18,10 @@ final class Submission
     private $id;
 
     /** @var string */
-    private $title;
+    private $url;
 
     /** @var string */
-    private $url;
+    private $title;
 
     /** @var DateTimeImmutable */
     private $creationDate;
@@ -29,15 +29,15 @@ final class Submission
     /**
      * Submission constructor.
      * @param UuidInterface $id
-     * @param string $title
      * @param string $url
+     * @param string $title
      * @param DateTimeImmutable $creationDate
      */
-    private function __construct(UuidInterface $id, string $title, string $url, DateTimeImmutable $creationDate)
+    public function __construct(UuidInterface $id, string $url, string $title, DateTimeImmutable $creationDate)
     {
         $this->id           = $id;
-        $this->title        = $title;
         $this->url          = $url;
+        $this->title        = $title;
         $this->creationDate = $creationDate;
     }
 
