@@ -13,6 +13,8 @@ use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
 use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Presentation\SubmissionsQuery;
+use App\Submission\Domain\SubmissionRepository;
+use App\Submission\Infrastructure\DbalSubmissionRepository;
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -38,6 +40,11 @@ $injector->alias(SubmissionsQuery::class, DbalSubmissionsQuery::class);
 // Use share() prevent the injector creating a new instance whenever an object is injected
 // The same instance of the object is reused for all classes that use this dependency.
 $injector->share(SubmissionsQuery::class);
+
+//----------------------
+// SubmissionRepository
+//----------------------
+$injector->alias(SubmissionRepository::class, DbalSubmissionRepository::class);
 
 //-----------------------
 // Database Access Layer
