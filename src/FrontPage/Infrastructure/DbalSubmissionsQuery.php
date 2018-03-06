@@ -27,7 +27,7 @@ final class DbalSubmissionsQuery implements SubmissionsQuery
     }
 
     /**
-     * @return array
+     * @return Submission[]
      */
     public function execute(): array
     {

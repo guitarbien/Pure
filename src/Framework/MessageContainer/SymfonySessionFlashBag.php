@@ -35,7 +35,7 @@ final class SymfonySessionFlashBag implements FlashMessenger
 
     /**
      * @param string $key
-     * @return array
+     * @return string[]
      */
     public function get(string $key): array
     {
