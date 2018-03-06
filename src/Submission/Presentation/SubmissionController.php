@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Submission\Presentation;
 
-use App\Framework\Csrf\StoredTokenValidator;
-use App\Framework\Csrf\Token;
 use App\Framework\MessageContainer\FlashMessenger;
 use App\Framework\Rendering\TemplateRenderer;
-use App\Submission\Application\SubmitLink;
 use App\Submission\Application\SubmitLinkHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +20,8 @@ final class SubmissionController
     /** @var TemplateRenderer */
     private $templateRenderer;
 
-    /** @var StoredTokenValidator */
-    private $storedTokenValidator;
+    /** @var SubmissionFormFactory */
+    private $submissionFormFactory;
 
     /** @var FlashMessenger */
     private $flashMessenger;
@@ -35,20 +32,20 @@ final class SubmissionController
     /**
      * SubmissionController constructor.
      * @param TemplateRenderer $templateRenderer
-     * @param StoredTokenValidator $storedTokenValidator
+     * @param SubmissionFormFactory $submissionFormFactory
      * @param FlashMessenger $flashMessenger
      * @param SubmitLinkHandler $submitLinkHandler
      */
     public function __construct(
         TemplateRenderer $templateRenderer,
-        StoredTokenValidator $storedTokenValidator,
+        SubmissionFormFactory $submissionFormFactory,
         FlashMessenger $flashMessenger,
         SubmitLinkHandler $submitLinkHandler
     ) {
-        $this->templateRenderer     = $templateRenderer;
-        $this->storedTokenValidator = $storedTokenValidator;
-        $this->flashMessenger       = $flashMessenger;
-        $this->submitLinkHandler    = $submitLinkHandler;
+        $this->templateRenderer = $templateRenderer;
+        $this->submissionFormFactory = $submissionFormFactory;
+        $this->flashMessenger = $flashMessenger;
+        $this->submitLinkHandler = $submitLinkHandler;
     }
 
     /**
@@ -69,16 +66,17 @@ final class SubmissionController
     {
         $response = new RedirectResponse('/submit');
 
-        if (!$this->storedTokenValidator->validate('submission', new Token($request->get('token')))) {
-            $this->flashMessenger->add('errors', 'Invalid token');
+        $form = $this->submissionFormFactory->createFromRequest($request);
+
+        if ($form->hasValidationErrors()) {
+            foreach ($form->getValidationErrors() as $errorMessage) {
+                $this->flashMessenger->add('errors', $errorMessage);
+            }
 
             return $response;
         }
 
-        $this->submitLinkHandler->handle(new SubmitLink(
-            $request->get('url'),
-            $request->get('title')
-        ));
+        $this->submitLinkHandler->handle($form->toCommand());
 
         $this->flashMessenger->add('success', 'Your URL was added successfully');
 
