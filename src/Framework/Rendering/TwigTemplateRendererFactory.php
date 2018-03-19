@@ -47,18 +47,19 @@ final class TwigTemplateRendererFactory
     public function create(): TwigTemplateRenderer
     {
         $templateDirectory = $this->templateDirectory->toString();
-        $loader = new Twig_Loader_Filesystem([$templateDirectory]);
-        $twigEnvironment = new Twig_Environment($loader);
+        $loader            = new Twig_Loader_Filesystem([$templateDirectory]);
+        $twigEnvironment   = new Twig_Environment($loader);
 
         $twigEnvironment->addFunction(
-            new Twig_Function('get_token', function(string $key): string {
+            new Twig_Function('get_token', function (string $key): string {
                 $token = $this->storedTokenReader->read($key);
+
                 return $token->toString();
             })
         );
 
         $twigEnvironment->addFunction(
-            new Twig_Function('get_flash_bag', function(): FlashMessenger {
+            new Twig_Function('get_flash_bag', function (): FlashMessenger {
                 return $this->flashMessenger;
             })
         );

@@ -42,6 +42,14 @@ final class SubmissionForm
     }
 
     /**
+     * @return bool
+     */
+    public function hasValidationErrors(): bool
+    {
+        return count($this->getValidationErrors()) > 0;
+    }
+
+    /**
      * @return string[]
      */
     public function getValidationErrors(): array
@@ -61,14 +69,6 @@ final class SubmissionForm
         }
 
         return $errors;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasValidationErrors(): bool
-    {
-        return count($this->getValidationErrors()) > 0;
     }
 
     /**

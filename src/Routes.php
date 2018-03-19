@@ -9,16 +9,16 @@ return [
     [
         'GET',
         '/',
-        FrontPageController::class . '#show'
+        FrontPageController::class . '#show',
     ],
     [
         'GET',
         '/submit',
-        SubmissionController::class . '#show'
+        SubmissionController::class . '#show',
     ],
     [
         'POST',
         '/submit',
-        SubmissionController::class . '#submit'
+        SubmissionController::class . '#submit',
     ],
 ];

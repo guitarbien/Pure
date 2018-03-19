@@ -20,7 +20,7 @@ $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 // use FastRoute to handle the route
 // Bootstrap is just responsible for showing the response
-$dispatcher = simpleDispatcher(function(RouteCollector $r) {
+$dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $routes = include(ROOT_DIR . '/src/Routes.php');
     foreach ($routes as $route) {
         $r->addRoute(...$route);
@@ -44,7 +44,7 @@ switch ($routeInfo[0]) {
         $vars = $routeInfo[2];
 
         /** @var Injector $injector */
-        $injector = include(ROOT_DIR . '/src/Dependencies.php');
+        $injector   = include(ROOT_DIR . '/src/Dependencies.php');
         $controller = $injector->make($controllerName);
 
         $response = $controller->$method($request, $vars);

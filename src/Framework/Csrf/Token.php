@@ -23,14 +23,6 @@ final class Token
     }
 
     /**
-     * @return string
-     */
-    public function toString(): string
-    {
-        return $this->token;
-    }
-
-    /**
      * @return Token
      * @throws \Exception
      */
@@ -48,5 +40,13 @@ final class Token
     public function equals(Token $token): bool
     {
         return $this->token === $token->toString();
+    }
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->token;
     }
 }

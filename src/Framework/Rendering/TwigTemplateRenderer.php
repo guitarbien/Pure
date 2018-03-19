@@ -12,7 +12,7 @@ use Twig_Environment;
  */
 final class TwigTemplateRenderer implements TemplateRenderer
 {
-    /** @var Twig_Environment  */
+    /** @var Twig_Environment */
     private $twigEnvironment;
 
     /**

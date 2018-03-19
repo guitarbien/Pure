@@ -11,7 +11,7 @@ define('ROOT_DIR', dirname(__DIR__));
 require ROOT_DIR . '/vendor/autoload.php';
 
 /** @var Injector $injector */
-$injector = include(ROOT_DIR . '/src/Dependencies.php');
+$injector   = include(ROOT_DIR . '/src/Dependencies.php');
 $connection = $injector->make(Connection::class);
 
 $migration = new Migration201803032130($connection);

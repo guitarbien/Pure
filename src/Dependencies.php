@@ -27,8 +27,9 @@ $injector = new Injector();
 //----------
 $injector->define(TemplateDirectory::class, [':rootDirectory' => ROOT_DIR]);
 
-$injector->delegate(TemplateRenderer::class, function() use($injector): TemplateRenderer {
+$injector->delegate(TemplateRenderer::class, function () use ($injector): TemplateRenderer {
     $factory = $injector->make(TwigTemplateRendererFactory::class);
+
     return $factory->create();
 });
 
@@ -51,8 +52,9 @@ $injector->alias(SubmissionRepository::class, DbalSubmissionRepository::class);
 //-----------------------
 $injector->define(DatabaseUrl::class, [':url' => 'sqlite:///' . ROOT_DIR . '/storage/db.sqlite3']);
 
-$injector->delegate(Connection::class, function() use($injector): Connection {
+$injector->delegate(Connection::class, function () use ($injector): Connection {
     $factory = $injector->make(ConnectionFactory::class);
+
     return $factory->create();
 });
 

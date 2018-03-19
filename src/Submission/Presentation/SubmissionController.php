@@ -42,10 +42,10 @@ final class SubmissionController
         FlashMessenger $flashMessenger,
         SubmitLinkHandler $submitLinkHandler
     ) {
-        $this->templateRenderer = $templateRenderer;
+        $this->templateRenderer      = $templateRenderer;
         $this->submissionFormFactory = $submissionFormFactory;
-        $this->flashMessenger = $flashMessenger;
-        $this->submitLinkHandler = $submitLinkHandler;
+        $this->flashMessenger        = $flashMessenger;
+        $this->submitLinkHandler     = $submitLinkHandler;
     }
 
     /**
