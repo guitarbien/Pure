@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\FrontPage\Presentation;
 
 use App\Framework\Rendering\TemplateRenderer;
+use App\FrontPage\Application\SubmissionsQuery;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class FrontPageController
 {
-    /** @var TemplateRenderer  */
+    /** @var TemplateRenderer */
     private $templateRenderer;
 
     /** @var SubmissionsQuery */

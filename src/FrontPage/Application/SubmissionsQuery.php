@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\FrontPage\Presentation;
+namespace App\FrontPage\Application;
 
 /**
  * Interface SubmissionsQuery
- * @package App\FrontPage\Presentation
+ * @package App\FrontPage\Application
  */
 interface SubmissionsQuery
 {

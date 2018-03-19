@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\FrontPage\Infrastructure;
 
 use App\FrontPage\Application\Submission;
-use App\FrontPage\Presentation\SubmissionsQuery;
+use App\FrontPage\Application\SubmissionsQuery;
 use Doctrine\DBAL\Connection;
 
 /**
