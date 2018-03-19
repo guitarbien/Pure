@@ -12,7 +12,7 @@ use App\Framework\Rendering\TemplateDirectory;
 use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
 use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
-use App\FrontPage\Presentation\SubmissionsQuery;
+use App\FrontPage\Application\SubmissionsQuery;
 use App\Submission\Domain\SubmissionRepository;
 use App\Submission\Infrastructure\DbalSubmissionRepository;
 use Auryn\Injector;
