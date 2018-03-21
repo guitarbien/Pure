@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Domain;
 
 use DateTimeImmutable;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -38,5 +39,20 @@ final class User
         $this->email        = $email;
         $this->passwordHash = $passwordHash;
         $this->creationDate = $creationDate;
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public static function register(string $email, string $password): User
+    {
+        return new User(
+            Uuid::uuid4(),
+            $email,
+            password_hash($password, PASSWORD_DEFAULT),
+            new DateTimeImmutable()
+        );
     }
 }
