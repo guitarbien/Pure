@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\FrontPage\Presentation\FrontPageController;
 use App\Submission\Presentation\SubmissionController;
+use App\User\Presentation\RegistrationController;
 
 return [
     [
@@ -20,5 +21,10 @@ return [
         'POST',
         '/submit',
         SubmissionController::class . '#submit',
+    ],
+    [
+        'GET',
+        '/register',
+        RegistrationController::class . '#show',
     ],
 ];
