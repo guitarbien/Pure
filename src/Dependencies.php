@@ -15,6 +15,8 @@ use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Application\SubmissionsQuery;
 use App\Submission\Domain\SubmissionRepository;
 use App\Submission\Infrastructure\DbalSubmissionRepository;
+use App\User\Domain\UserRepository;
+use App\User\Infrastructure\DbalUserRepository;
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -72,5 +74,10 @@ $injector->alias(SessionInterface::class, Session::class);
 //---------------
 $injector->alias(FlashMessenger::class, SymfonySessionFlashBag::class);
 $injector->share(FlashMessenger::class);
+
+//---------------
+// UserRepository
+//---------------
+$injector->alias(UserRepository::class, DbalUserRepository::class);
 
 return $injector;
