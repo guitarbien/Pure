@@ -55,4 +55,36 @@ final class User
             new DateTimeImmutable()
         );
     }
+
+    /**
+     * @return UuidInterface
+     */
+    public function getId(): UuidInterface
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordHash(): string
+    {
+        return $this->passwordHash;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getCreationDate(): DateTimeImmutable
+    {
+        return $this->creationDate;
+    }
 }
