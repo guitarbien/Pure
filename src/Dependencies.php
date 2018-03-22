@@ -15,7 +15,9 @@ use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Application\SubmissionsQuery;
 use App\Submission\Domain\SubmissionRepository;
 use App\Submission\Infrastructure\DbalSubmissionRepository;
+use App\User\Application\EmailTakenQuery;
 use App\User\Domain\UserRepository;
+use App\User\Infrastructure\DbalEmailTakenQuery;
 use App\User\Infrastructure\DbalUserRepository;
 use Auryn\Injector;
 use Doctrine\DBAL\Connection;
@@ -79,5 +81,6 @@ $injector->share(FlashMessenger::class);
 // UserRepository
 //---------------
 $injector->alias(UserRepository::class, DbalUserRepository::class);
+$injector->alias(EmailTakenQuery::class, DbalEmailTakenQuery::class);
 
 return $injector;
