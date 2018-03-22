@@ -70,6 +70,7 @@ final class RegistrationController
         }
 
         // register the user
+        $this->registerUserHandler->handle($form->toCommand());
 
         $this->flashMessenger->add('success', 'Your account was created. You can now log in.');
 
