@@ -6,10 +6,10 @@ namespace App\User\Presentation;
 
 use App\Framework\MessageContainer\FlashMessenger;
 use App\Framework\Rendering\TemplateRenderer;
+use App\User\Application\RegisterUserHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class RegistrationController
@@ -26,20 +26,26 @@ final class RegistrationController
     /** @var FlashMessenger */
     private $flashMessenger;
 
+    /** @var RegisterUserHandler */
+    private $registerUserHandler;
+
     /**
      * RegistrationController constructor.
      * @param TemplateRenderer $templateRenderer
      * @param RegisterUserFormFactory $registerUserFormFactory
      * @param FlashMessenger $flashMessenger
+     * @param RegisterUserHandler $registerUserHandler
      */
     public function __construct(
         TemplateRenderer $templateRenderer,
         RegisterUserFormFactory $registerUserFormFactory,
-        FlashMessenger $flashMessenger
+        FlashMessenger $flashMessenger,
+        RegisterUserHandler $registerUserHandler
     ) {
         $this->templateRenderer = $templateRenderer;
         $this->registerUserFormFactory = $registerUserFormFactory;
         $this->flashMessenger = $flashMessenger;
+        $this->registerUserHandler = $registerUserHandler;
     }
 
     /**
