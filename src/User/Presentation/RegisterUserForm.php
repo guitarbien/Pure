@@ -6,6 +6,7 @@ namespace App\User\Presentation;
 
 use App\Framework\Csrf\StoredTokenValidator;
 use App\Framework\Csrf\Token;
+use App\User\Application\EmailTakenQuery;
 use App\User\Application\RegisterUser;
 
 /**
@@ -16,6 +17,9 @@ final class RegisterUserForm
 {
     /** @var StoredTokenValidator */
     private $storedTokenValidator;
+
+    /** @var EmailTakenQuery */
+    private $emailTakenQuery;
 
     /** @var string */
     private $token;
@@ -29,19 +33,22 @@ final class RegisterUserForm
     /**
      * RegisterUserForm constructor.
      * @param StoredTokenValidator $storedTokenValidator
+     * @param EmailTakenQuery $emailTakenQuery
      * @param string $token
-     * @param string $nickname
+     * @param string $email
      * @param string $password
      */
     public function __construct(
         StoredTokenValidator $storedTokenValidator,
+        EmailTakenQuery $emailTakenQuery,
         string $token,
-        string $nickname,
+        string $email,
         string $password
     ) {
         $this->storedTokenValidator = $storedTokenValidator;
+        $this->emailTakenQuery      = $emailTakenQuery;
         $this->token                = $token;
-        $this->email                = $nickname;
+        $this->email                = $email;
         $this->password             = $password;
     }
 
