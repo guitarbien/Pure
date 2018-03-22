@@ -27,4 +27,9 @@ return [
         '/register',
         RegistrationController::class . '#show',
     ],
+    [
+        'POST',
+        '/register',
+        RegistrationController::class . '#register',
+    ],
 ];
