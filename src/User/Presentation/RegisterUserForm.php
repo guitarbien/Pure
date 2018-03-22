@@ -79,6 +79,10 @@ final class RegisterUserForm
             $errors[] = 'Password must be at least 8 characters';
         }
 
+        if ($this->emailTakenQuery->execute($this->email)) {
+            $errors[] = 'This email is already being used';
+        }
+
         return $errors;
     }
 
