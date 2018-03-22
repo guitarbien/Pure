@@ -67,8 +67,9 @@ final class RegistrationController
         $response = new RedirectResponse('/register');
         $form = $this->registerUserFormFactory->createFormRequest($request);
 
-        if ($form->hasValidationErrors()) {
-            foreach ($form->getValidationErrors() as $errorMessage) {
+        $errors = $form->getValidationErrors();
+        if (count($errors) > 0) {
+            foreach ($errors as $errorMessage) {
                 $this->flashMessenger->add('errors', $errorMessage);
             }
 

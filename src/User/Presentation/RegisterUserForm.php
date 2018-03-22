@@ -53,14 +53,6 @@ final class RegisterUserForm
     }
 
     /**
-     * @return bool
-     */
-    public function hasValidationErrors(): bool
-    {
-        return count($this->getValidationErrors()) > 0;
-    }
-
-    /**
      * @return array
      */
     public function getValidationErrors(): array

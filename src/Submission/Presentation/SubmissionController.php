@@ -68,8 +68,9 @@ final class SubmissionController
 
         $form = $this->submissionFormFactory->createFromRequest($request);
 
-        if ($form->hasValidationErrors()) {
-            foreach ($form->getValidationErrors() as $errorMessage) {
+        $errors = $form->getValidationErrors();
+        if (count($errors) > 0) {
+            foreach ($errors as $errorMessage) {
                 $this->flashMessenger->add('errors', $errorMessage);
             }
 
