@@ -38,4 +38,9 @@ return [
         '/login',
         LoginController::class . '#show',
     ],
+    [
+        'POST',
+        '/login',
+        LoginController::class . '#logIn',
+    ],
 ];
