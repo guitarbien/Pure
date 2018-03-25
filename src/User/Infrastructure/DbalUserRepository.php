@@ -44,4 +44,20 @@ final class DbalUserRepository implements UserRepository
 
         $queryBuilder->execute();
     }
+
+    /**
+     * @param User $user
+     */
+    public function save(User $user): void
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $queryBuilder->update('users');
+        $queryBuilder->set('email', $queryBuilder->createNamedParameter($user->getEmail()));
+        $queryBuilder->set('password_hash', $queryBuilder->createNamedParameter($user->getPasswordHash()));
+        $queryBuilder->set('failed_login_attempts', $queryBuilder->createNamedParameter($user->getFailedLoginAttempts()));
+        $queryBuilder->set('last_failed_login_attempt', $queryBuilder->createNamedParameter($user->getLastFailedLoginAttempt()));
+
+        $queryBuilder->execute();
+    }
 }
