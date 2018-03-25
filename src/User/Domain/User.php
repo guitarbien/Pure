@@ -26,19 +26,35 @@ final class User
     /** @var DateTimeImmutable */
     private $creationDate;
 
+    /** @var int */
+    private $failedLoginAttempts;
+
+    /** @var DateTimeImmutable */
+    private $lastFailedLoginAttempt;
+
     /**
      * User constructor.
      * @param UuidInterface $id
      * @param string $email
      * @param string $passwordHash
      * @param DateTimeImmutable $creationDate
+     * @param int $failedLoginAttempts
+     * @param DateTimeImmutable|null $lastFailedLoginAttempt
      */
-    public function __construct(UuidInterface $id, string $email, string $passwordHash, DateTimeImmutable $creationDate)
-    {
-        $this->id           = $id;
-        $this->email        = $email;
-        $this->passwordHash = $passwordHash;
-        $this->creationDate = $creationDate;
+    public function __construct(
+        UuidInterface $id,
+        string $email,
+        string $passwordHash,
+        DateTimeImmutable $creationDate,
+        int $failedLoginAttempts,
+        ?DateTimeImmutable $lastFailedLoginAttempt
+    ) {
+        $this->id                     = $id;
+        $this->email                  = $email;
+        $this->passwordHash           = $passwordHash;
+        $this->creationDate           = $creationDate;
+        $this->failedLoginAttempts    = $failedLoginAttempts;
+        $this->lastFailedLoginAttempt = $lastFailedLoginAttempt;
     }
 
     /**
@@ -52,8 +68,25 @@ final class User
             Uuid::uuid4(),
             $email,
             password_hash($password, PASSWORD_DEFAULT),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            0,
+            null
         );
+    }
+
+    /**
+     * @param string $password
+     */
+    public function logIn(string $password): void
+    {
+        if (!password_verify($password, password_hash($password, PASSWORD_DEFAULT))) {
+            $this->failedLoginAttempts = new DateTimeImmutable();
+            $this->lastFailedLoginAttempt++;
+            return;
+        }
+
+        $this->failedLoginAttempts = 0;
+        $this->lastFailedLoginAttempt = null;
     }
 
     /**
@@ -86,5 +119,21 @@ final class User
     public function getCreationDate(): DateTimeImmutable
     {
         return $this->creationDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFailedLoginAttempts(): int
+    {
+        return $this->failedLoginAttempts;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getLastFailedLoginAttempt(): DateTimeImmutable
+    {
+        return $this->lastFailedLoginAttempt;
     }
 }
