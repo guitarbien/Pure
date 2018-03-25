@@ -6,8 +6,10 @@ namespace App\User\Infrastructure;
 
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class DbalUserRepository
@@ -59,5 +61,53 @@ final class DbalUserRepository implements UserRepository
         $queryBuilder->set('last_failed_login_attempt', $queryBuilder->createNamedParameter($user->getLastFailedLoginAttempt()));
 
         $queryBuilder->execute();
+    }
+
+    /**
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $queryBuilder->addSelect('id');
+        $queryBuilder->addSelect('email');
+        $queryBuilder->addSelect('password_hash');
+        $queryBuilder->addSelect('creation_date');
+        $queryBuilder->addSelect('failed_login_attempts');
+        $queryBuilder->addSelect('last_failed_login_attempt');
+        $queryBuilder->from('users');
+        $queryBuilder->where("email = {$queryBuilder->createNamedParameter($email)}");
+
+        $stmt = $queryBuilder->execute();
+        $row = $stmt->fetch();
+
+        if (empty($row)) {
+            return null;
+        }
+
+        return $this->createUserFromRow($row);
+    }
+
+    /**
+     * @param array $row
+     * @return User
+     */
+    private function createUserFromRow(array $row): User
+    {
+        $lastFailedLoginAttempt = null;
+        if ($row['last_failed_login_attempt']) {
+            $lastFailedLoginAttempt = new DateTimeImmutable($row['last_failed_login_attempt']);
+        }
+
+        return new User(
+            Uuid::fromString($row['id']),
+            $row['email'],
+            $row['password_hash'],
+            new DateTimeImmutable($row['creation_date']),
+            (int)$row['failed_login_attempts'],
+            $lastFailedLoginAttempt
+        );
     }
 }
