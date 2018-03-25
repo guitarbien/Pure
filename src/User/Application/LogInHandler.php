@@ -29,6 +29,15 @@ final class LogInHandler
      */
     public function handle(LogIn $command): void
     {
+        $user = $this->userRepository->findByEmail($command->getEmail());
 
+        if ($user === null) {
+            return;
+        }
+
+        // authenticate
+        $user->logIn($command->getPassword());
+
+        $this->userRepository->save($user);
     }
 }
