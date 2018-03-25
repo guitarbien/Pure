@@ -132,7 +132,7 @@ final class User
     /**
      * @return DateTimeImmutable
      */
-    public function getLastFailedLoginAttempt(): DateTimeImmutable
+    public function getLastFailedLoginAttempt(): ?DateTimeImmutable
     {
         return $this->lastFailedLoginAttempt;
     }
