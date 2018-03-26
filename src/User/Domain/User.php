@@ -79,9 +79,9 @@ final class User
      */
     public function logIn(string $password): void
     {
-        if (!password_verify($password, password_hash($password, PASSWORD_DEFAULT))) {
-            $this->failedLoginAttempts = new DateTimeImmutable();
-            $this->lastFailedLoginAttempt++;
+        if (!password_verify($password, $this->getPasswordHash())) {
+            $this->lastFailedLoginAttempt = new DateTimeImmutable();
+            $this->failedLoginAttempts++;
             return;
         }
 
