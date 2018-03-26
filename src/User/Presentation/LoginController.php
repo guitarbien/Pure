@@ -33,23 +33,29 @@ final class LoginController
     /** @var LogInHandler */
     private $logInHandler;
 
+    /** @var Session */
+    private $session;
+
     /**
      * LoginController constructor.
      * @param TemplateRenderer $templateRenderer
      * @param StoredTokenValidator $storedTokenValidator
      * @param FlashMessenger $flashMessenger
      * @param LogInHandler $logInHandler
+     * @param Session $session
      */
     public function __construct(
         TemplateRenderer $templateRenderer,
         StoredTokenValidator $storedTokenValidator,
         FlashMessenger $flashMessenger,
-        LogInHandler $logInHandler
+        LogInHandler $logInHandler,
+        Session $session
     ) {
         $this->templateRenderer = $templateRenderer;
         $this->storedTokenValidator = $storedTokenValidator;
         $this->flashMessenger = $flashMessenger;
         $this->logInHandler = $logInHandler;
+        $this->session = $session;
     }
 
     /**
@@ -68,6 +74,8 @@ final class LoginController
      */
     public function logIn(Request $request): Response
     {
+        $this->session->remove('userId');
+
         if (!$this->storedTokenValidator->validate('login', new Token((string)$request->get('token')))) {
             $this->flashMessenger->add('errors', 'Invalid token');
 
@@ -80,6 +88,10 @@ final class LoginController
         ));
 
         // validate that the user was logged in
+        if ($this->session->get('userId') === null) {
+            $this->flashMessenger->add('errors', 'Invalid username or password');
+            return new RedirectResponse('/login');
+        }
 
         $this->flashMessenger->add('success', 'You were logged in.');
         return new RedirectResponse('/');
