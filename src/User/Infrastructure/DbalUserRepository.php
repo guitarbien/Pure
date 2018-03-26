@@ -6,10 +6,13 @@ namespace App\User\Infrastructure;
 
 use App\User\Domain\User;
 use App\User\Domain\UserRepository;
+use App\User\Domain\UserWasLoggedIn;
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Type;
+use LogicException;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Class DbalUserRepository
@@ -20,13 +23,18 @@ final class DbalUserRepository implements UserRepository
     /** @var Connection */
     private $connection;
 
+    /** @var Session */
+    private $session;
+
     /**
      * DbalUserRepository constructor.
      * @param Connection $connection
+     * @param Session $session
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, Session $session)
     {
         $this->connection = $connection;
+        $this->session    = $session;
     }
 
     /**
@@ -52,6 +60,17 @@ final class DbalUserRepository implements UserRepository
      */
     public function save(User $user): void
     {
+        foreach ($user->getRecordedEvents() as $event) {
+            if ($event instanceof UserWasLoggedIn) {
+                $this->session->set('userId', $user->getId()->toString());
+                continue;
+            }
+
+            throw new LogicException(get_class($event) . ' was not handled');
+        }
+
+        $user->clearRecordedEvents();
+
         $queryBuilder = $this->connection->createQueryBuilder();
 
         $queryBuilder->update('users');

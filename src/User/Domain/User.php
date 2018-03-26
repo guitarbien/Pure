@@ -32,6 +32,9 @@ final class User
     /** @var DateTimeImmutable */
     private $lastFailedLoginAttempt;
 
+    /** @var array */
+    private $recordedEvents = [];
+
     /**
      * User constructor.
      * @param UuidInterface $id
@@ -85,6 +88,8 @@ final class User
             return;
         }
 
+        $this->recordedEvents[] = new UserWasLoggedIn();
+
         $this->failedLoginAttempts = 0;
         $this->lastFailedLoginAttempt = null;
     }
@@ -135,5 +140,18 @@ final class User
     public function getLastFailedLoginAttempt(): ?DateTimeImmutable
     {
         return $this->lastFailedLoginAttempt;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRecordedEvents(): array
+    {
+        return $this->recordedEvents;
+    }
+
+    public function clearRecordedEvents(): void
+    {
+        $this->recordedEvents = [];
     }
 }
