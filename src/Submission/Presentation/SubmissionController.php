@@ -6,9 +6,12 @@ namespace App\Submission\Presentation;
 
 use App\Framework\MessageContainer\FlashMessenger;
 use App\Framework\Rendering\TemplateRenderer;
+use App\Framework\RoleBasedAccessControl\AuthenticatedUser;
 use App\Framework\RoleBasedAccessControl\Permission\SubmitLink;
 use App\Framework\RoleBasedAccessControl\User;
 use App\Submission\Application\SubmitLinkHandler;
+use Exception;
+use LogicException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,6 +81,7 @@ final class SubmissionController
     /**
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function submit(Request $request): Response
     {
@@ -103,7 +107,11 @@ final class SubmissionController
             return $response;
         }
 
-        $this->submitLinkHandler->handle($form->toCommand());
+        if (!$this->user instanceof AuthenticatedUser) {
+            throw new LogicException('Only authenticated users can submit links');
+        }
+
+        $this->submitLinkHandler->handle($form->toCommand($this->user));
 
         $this->flashMessenger->add('success', 'Your URL was added successfully');
 
