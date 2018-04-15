@@ -35,10 +35,11 @@ final class DbalSubmissionRepository implements SubmissionRepository
 
         $queryBuilder->insert('submissions');
         $queryBuilder->values([
-            'id'            => $queryBuilder->createNamedParameter($submission->getId()->toString()),
-            'title'         => $queryBuilder->createNamedParameter($submission->getTitle()),
-            'url'           => $queryBuilder->createNamedParameter($submission->getUrl()),
-            'creation_date' => $queryBuilder->createNamedParameter($submission->getCreationDate(), 'datetime'),
+            'id'             => $queryBuilder->createNamedParameter($submission->getId()->toString()),
+            'author_user_id' => $queryBuilder->createNamedParameter($submission->getAuthorId()->toString()),
+            'title'          => $queryBuilder->createNamedParameter($submission->getTitle()),
+            'url'            => $queryBuilder->createNamedParameter($submission->getUrl()),
+            'creation_date'  => $queryBuilder->createNamedParameter($submission->getCreationDate(), 'datetime'),
         ]);
 
         $queryBuilder->execute();
