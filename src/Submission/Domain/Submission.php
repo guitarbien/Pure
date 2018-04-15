@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Submission\Domain;
 
 use DateTimeImmutable;
+use Exception;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
@@ -16,6 +17,9 @@ final class Submission
 {
     /** @var UuidInterface */
     private $id;
+
+    /** @var AuthorId */
+    private $authorId;
 
     /** @var string */
     private $url;
@@ -29,26 +33,35 @@ final class Submission
     /**
      * Submission constructor.
      * @param UuidInterface $id
+     * @param AuthorId $authorId
      * @param string $url
      * @param string $title
      * @param DateTimeImmutable $creationDate
      */
-    public function __construct(UuidInterface $id, string $url, string $title, DateTimeImmutable $creationDate)
-    {
+    public function __construct(
+        UuidInterface $id,
+        AuthorId $authorId,
+        string $url,
+        string $title,
+        DateTimeImmutable $creationDate
+    ) {
         $this->id           = $id;
+        $this->authorId     = $authorId;
         $this->url          = $url;
         $this->title        = $title;
         $this->creationDate = $creationDate;
     }
 
     /**
+     * @param UuidInterface $authorId
      * @param string $url
      * @param string $title
      * @return Submission
+     * @throws Exception
      */
-    public static function submit(string $url, string $title): self
+    public static function submit(UuidInterface $authorId, string $url, string $title): self
     {
-        return new Submission(Uuid::uuid4(), $url, $title, new DateTimeImmutable());
+        return new Submission(Uuid::uuid4(), AuthorId::fromUuid($authorId), $url, $title, new DateTimeImmutable());
     }
 
     /**
@@ -57,6 +70,14 @@ final class Submission
     public function getId(): UuidInterface
     {
         return $this->id;
+    }
+
+    /**
+     * @return AuthorId
+     */
+    public function getAuthorId(): AuthorId
+    {
+        return $this->authorId;
     }
 
     /**
