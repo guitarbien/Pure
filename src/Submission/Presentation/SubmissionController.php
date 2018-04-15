@@ -6,6 +6,8 @@ namespace App\Submission\Presentation;
 
 use App\Framework\MessageContainer\FlashMessenger;
 use App\Framework\Rendering\TemplateRenderer;
+use App\Framework\RoleBasedAccessControl\Permission\SubmitLink;
+use App\Framework\RoleBasedAccessControl\User;
 use App\Submission\Application\SubmitLinkHandler;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,23 +31,29 @@ final class SubmissionController
     /** @var SubmitLinkHandler */
     private $submitLinkHandler;
 
+    /** @var User */
+    private $user;
+
     /**
      * SubmissionController constructor.
      * @param TemplateRenderer $templateRenderer
      * @param SubmissionFormFactory $submissionFormFactory
      * @param FlashMessenger $flashMessenger
      * @param SubmitLinkHandler $submitLinkHandler
+     * @param User $user
      */
     public function __construct(
         TemplateRenderer $templateRenderer,
         SubmissionFormFactory $submissionFormFactory,
         FlashMessenger $flashMessenger,
-        SubmitLinkHandler $submitLinkHandler
+        SubmitLinkHandler $submitLinkHandler,
+        User $user
     ) {
-        $this->templateRenderer      = $templateRenderer;
+        $this->templateRenderer = $templateRenderer;
         $this->submissionFormFactory = $submissionFormFactory;
-        $this->flashMessenger        = $flashMessenger;
-        $this->submitLinkHandler     = $submitLinkHandler;
+        $this->flashMessenger = $flashMessenger;
+        $this->submitLinkHandler = $submitLinkHandler;
+        $this->user = $user;
     }
 
     /**
@@ -53,6 +61,15 @@ final class SubmissionController
      */
     public function show(): Response
     {
+        if (!$this->user->hasPermission(new SubmitLink())) {
+            $this->flashMessenger->add(
+                'errors',
+                'You have to log in before you can submit a link.'
+            );
+
+            return new RedirectResponse('/login');
+        }
+
         $content = $this->templateRenderer->render('Submission.html.twig');
 
         return new Response($content);
@@ -64,6 +81,15 @@ final class SubmissionController
      */
     public function submit(Request $request): Response
     {
+        if (!$this->user->hasPermission(new SubmitLink())) {
+            $this->flashMessenger->add(
+                'errors',
+                'You have to log in before you can submit a link.'
+            );
+
+            return new RedirectResponse('/login');
+        }
+
         $response = new RedirectResponse('/submit');
 
         $form = $this->submissionFormFactory->createFromRequest($request);
