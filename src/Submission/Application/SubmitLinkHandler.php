@@ -6,6 +6,7 @@ namespace App\Submission\Application;
 
 use App\Submission\Domain\Submission;
 use App\Submission\Domain\SubmissionRepository;
+use Exception;
 
 /**
  * Class SubmitLinkHandler
@@ -27,10 +28,11 @@ final class SubmitLinkHandler
 
     /**
      * @param SubmitLink $command
+     * @throws Exception
      */
     public function handle(SubmitLink $command): void
     {
-        $submission = Submission::submit($command->getUrl(), $command->getTitle());
+        $submission = Submission::submit($command->getAuthorId(), $command->getUrl(), $command->getTitle());
         $this->submissionRepository->add($submission);
     }
 }
