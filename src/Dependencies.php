@@ -11,6 +11,8 @@ use App\Framework\MessageContainer\SymfonySessionFlashBag;
 use App\Framework\Rendering\TemplateDirectory;
 use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
+use App\Framework\RoleBasedAccessControl\SymfonySessionCurrentUserFactory;
+use App\Framework\RoleBasedAccessControl\User;
 use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Application\SubmissionsQuery;
 use App\Submission\Domain\SubmissionRepository;
@@ -82,5 +84,13 @@ $injector->share(FlashMessenger::class);
 //---------------
 $injector->alias(UserRepository::class, DbalUserRepository::class);
 $injector->alias(EmailTakenQuery::class, DbalEmailTakenQuery::class);
+
+//---------------
+// User Permission
+//---------------
+$injector->delegate(User::class, function () use ($injector) {
+    $factory = $injector->make(SymfonySessionCurrentUserFactory::class);
+    return $factory->create();
+});
 
 return $injector;
