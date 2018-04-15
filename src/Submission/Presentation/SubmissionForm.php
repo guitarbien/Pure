@@ -6,6 +6,7 @@ namespace App\Submission\Presentation;
 
 use App\Framework\Csrf\StoredTokenValidator;
 use App\Framework\Csrf\Token;
+use App\Framework\RoleBasedAccessControl\AuthenticatedUser;
 use App\Submission\Application\SubmitLink;
 
 /**
@@ -64,10 +65,11 @@ final class SubmissionForm
     }
 
     /**
+     * @param AuthenticatedUser $author
      * @return SubmitLink
      */
-    public function toCommand(): SubmitLink
+    public function toCommand(AuthenticatedUser $author): SubmitLink
     {
-        return new SubmitLink($this->url, $this->title);
+        return new SubmitLink($author->getId(), $this->url, $this->title);
     }
 }
