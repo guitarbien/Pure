@@ -38,7 +38,7 @@ final class Submission
      * @param string $title
      * @param DateTimeImmutable $creationDate
      */
-    public function __construct(
+    private function __construct(
         UuidInterface $id,
         AuthorId $authorId,
         string $url,

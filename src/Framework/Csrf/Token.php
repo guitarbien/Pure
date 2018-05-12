@@ -17,7 +17,7 @@ final class Token
      * Token constructor.
      * @param string $token
      */
-    public function __construct(string $token)
+    private function __construct(string $token)
     {
         $this->token = $token;
     }
