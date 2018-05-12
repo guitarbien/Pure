@@ -85,6 +85,7 @@ final class DbalUserRepository implements UserRepository
     /**
      * @param string $email
      * @return User|null
+     * @throws \Exception
      */
     public function findByEmail(string $email): ?User
     {
@@ -112,6 +113,7 @@ final class DbalUserRepository implements UserRepository
     /**
      * @param array $row
      * @return User
+     * @throws \Exception
      */
     private function createUserFromRow(array $row): User
     {

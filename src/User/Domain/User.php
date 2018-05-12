@@ -64,6 +64,7 @@ final class User
      * @param string $email
      * @param string $password
      * @return User
+     * @throws \Exception
      */
     public static function register(string $email, string $password): User
     {
@@ -79,6 +80,7 @@ final class User
 
     /**
      * @param string $password
+     * @throws \Exception
      */
     public function logIn(string $password): void
     {
