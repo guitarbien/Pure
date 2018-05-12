@@ -46,8 +46,7 @@ final class TwigTemplateRendererFactory
      */
     public function create(): TwigTemplateRenderer
     {
-        $templateDirectory = $this->templateDirectory->toString();
-        $loader            = new Twig_Loader_Filesystem([$templateDirectory]);
+        $loader            = new Twig_Loader_Filesystem([$this->templateDirectory->toString()]);
         $twigEnvironment   = new Twig_Environment($loader);
 
         $twigEnvironment->addFunction(

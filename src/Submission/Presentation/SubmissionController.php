@@ -37,6 +37,9 @@ final class SubmissionController
     /** @var User */
     private $user;
 
+    /** @var string */
+    const ERROR_FLASH_KEY = 'errors';
+
     /**
      * SubmissionController constructor.
      * @param TemplateRenderer $templateRenderer
@@ -66,7 +69,7 @@ final class SubmissionController
     {
         if (!$this->user->hasPermission(new SubmitLink())) {
             $this->flashMessenger->add(
-                'errors',
+                self::ERROR_FLASH_KEY,
                 'You have to log in before you can submit a link.'
             );
 
@@ -87,7 +90,7 @@ final class SubmissionController
     {
         if (!$this->user->hasPermission(new SubmitLink())) {
             $this->flashMessenger->add(
-                'errors',
+                self::ERROR_FLASH_KEY,
                 'You have to log in before you can submit a link.'
             );
 
@@ -101,7 +104,7 @@ final class SubmissionController
         $errors = $form->getValidationErrors();
         if (count($errors) > 0) {
             foreach ($errors as $errorMessage) {
-                $this->flashMessenger->add('errors', $errorMessage);
+                $this->flashMessenger->add(self::ERROR_FLASH_KEY, $errorMessage);
             }
 
             return $response;
