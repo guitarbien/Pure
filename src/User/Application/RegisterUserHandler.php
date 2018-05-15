@@ -27,6 +27,7 @@ final class RegisterUserHandler
 
     /**
      * @param RegisterUser $command
+     * @throws \Exception
      */
     public function handle(RegisterUser $command): void
     {

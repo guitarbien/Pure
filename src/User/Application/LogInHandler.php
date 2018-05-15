@@ -26,6 +26,7 @@ final class LogInHandler
 
     /**
      * @param LogIn $command
+     * @throws \Exception
      */
     public function handle(LogIn $command): void
     {
