@@ -33,12 +33,6 @@ $routeInfo = $dispatcher->dispatch(
 );
 
 switch ($routeInfo[0]) {
-    case Dispatcher::NOT_FOUND:
-        $response = new Response('Not Found', 404);
-        break;
-    case Dispatcher::METHOD_NOT_ALLOWED:
-        $response = new Response('Method not allowed', 405);
-        break;
     case Dispatcher::FOUND:
         [$controllerName, $method] = explode('#', $routeInfo[1]);
         $vars = $routeInfo[2];
@@ -48,6 +42,13 @@ switch ($routeInfo[0]) {
         $controller = $injector->make($controllerName);
 
         $response = $controller->$method($request, $vars);
+        break;
+    case Dispatcher::METHOD_NOT_ALLOWED:
+        $response = new Response('Method not allowed', 405);
+        break;
+    case Dispatcher::NOT_FOUND:
+    default:
+        $response = new Response('Not Found', 404);
         break;
 }
 
