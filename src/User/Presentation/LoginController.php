@@ -71,6 +71,7 @@ final class LoginController
     /**
      * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function logIn(Request $request): Response
     {
