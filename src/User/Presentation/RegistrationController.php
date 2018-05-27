@@ -61,6 +61,7 @@ final class RegistrationController
     /**
      * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function register(Request $request): Response
     {
