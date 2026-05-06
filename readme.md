@@ -1,3 +1,8 @@
+## Requirements
+
+- PHP **8.4+**
+- Composer
+
 ## Structure
 
 - bin : Something like artisan command, it's just a entrance to execute the command for once.
