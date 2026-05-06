@@ -20,7 +20,7 @@
     }
   },
   "require-dev": {
-    "tracy/tracy": "^3.0",
+    "tracy/tracy": "^2.10",
     "phpunit/phpunit": "^11.0"
   }
 }
