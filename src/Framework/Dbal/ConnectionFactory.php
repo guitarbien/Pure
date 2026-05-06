@@ -7,28 +7,19 @@ namespace App\Framework\Dbal;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 
-/**
- * Class ConnectionFactory
- * @package App\Framework\Dbal
- */
 final class ConnectionFactory
 {
-    /** @var DatabaseUrl */
-    private $databaseUrl;
+    private DatabaseUrl $databaseUrl;
 
-    /**
-     * ConnectionFactory constructor.
-     * @param DatabaseUrl $databaseUrl
-     */
     public function __construct(DatabaseUrl $databaseUrl)
     {
         $this->databaseUrl = $databaseUrl;
     }
 
     /**
-     * @return Connection
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws Exception
      */
     public function create(): Connection
     {

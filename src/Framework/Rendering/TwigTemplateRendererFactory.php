@@ -6,31 +6,16 @@ namespace App\Framework\Rendering;
 
 use App\Framework\Csrf\StoredTokenReader;
 use App\Framework\MessageContainer\FlashMessenger;
-use Twig_Environment;
-use Twig_Function;
-use Twig_Loader_Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
-/**
- * Class TwigTemplateRendererFactory
- * @package App\Framework\Rendering
- */
 final class TwigTemplateRendererFactory
 {
-    /** @var StoredTokenReader */
-    private $storedTokenReader;
+    private StoredTokenReader $storedTokenReader;
+    private TemplateDirectory $templateDirectory;
+    private FlashMessenger $flashMessenger;
 
-    /** @var TemplateDirectory */
-    private $templateDirectory;
-
-    /** @var FlashMessenger */
-    private $flashMessenger;
-
-    /**
-     * TwigTemplateRendererFactory constructor.
-     * @param StoredTokenReader $storedTokenReader
-     * @param TemplateDirectory $templateDirectory
-     * @param FlashMessenger $flashMessenger
-     */
     public function __construct(
         StoredTokenReader $storedTokenReader,
         TemplateDirectory $templateDirectory,
@@ -41,16 +26,13 @@ final class TwigTemplateRendererFactory
         $this->flashMessenger    = $flashMessenger;
     }
 
-    /**
-     * @return TwigTemplateRenderer
-     */
     public function create(): TwigTemplateRenderer
     {
-        $loader            = new Twig_Loader_Filesystem([$this->templateDirectory->toString()]);
-        $twigEnvironment   = new Twig_Environment($loader);
+        $loader          = new FilesystemLoader([$this->templateDirectory->toString()]);
+        $twigEnvironment = new Environment($loader);
 
         $twigEnvironment->addFunction(
-            new Twig_Function('get_token', function (string $key): string {
+            new TwigFunction('get_token', function (string $key): string {
                 $token = $this->storedTokenReader->read($key);
 
                 return $token->toString();
@@ -58,7 +40,7 @@ final class TwigTemplateRendererFactory
         );
 
         $twigEnvironment->addFunction(
-            new Twig_Function('get_flash_bag', function (): FlashMessenger {
+            new TwigFunction('get_flash_bag', function (): FlashMessenger {
                 return $this->flashMessenger;
             })
         );

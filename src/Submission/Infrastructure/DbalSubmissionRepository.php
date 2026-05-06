@@ -7,28 +7,17 @@ namespace App\Submission\Infrastructure;
 use App\Submission\Domain\Submission;
 use App\Submission\Domain\SubmissionRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 
-/**
- * Class DbalSubmissionRepository
- * @package App\Submission\Infrastructure
- */
 final class DbalSubmissionRepository implements SubmissionRepository
 {
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * DbalSubmissionRepository constructor.
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
     }
 
-    /**
-     * @param Submission $submission
-     */
     public function add(Submission $submission): void
     {
         $queryBuilder = $this->connection->createQueryBuilder();
@@ -39,9 +28,9 @@ final class DbalSubmissionRepository implements SubmissionRepository
             'author_user_id' => $queryBuilder->createNamedParameter($submission->getAuthorId()->toString()),
             'title'          => $queryBuilder->createNamedParameter($submission->getTitle()),
             'url'            => $queryBuilder->createNamedParameter($submission->getUrl()),
-            'creation_date'  => $queryBuilder->createNamedParameter($submission->getCreationDate(), 'datetime'),
+            'creation_date'  => $queryBuilder->createNamedParameter($submission->getCreationDate(), Types::DATETIME_MUTABLE),
         ]);
 
-        $queryBuilder->execute();
+        $queryBuilder->executeStatement();
     }
 }

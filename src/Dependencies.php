@@ -13,84 +13,83 @@ use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\Rendering\TwigTemplateRendererFactory;
 use App\Framework\RoleBasedAccessControl\SymfonySessionCurrentUserFactory;
 use App\Framework\RoleBasedAccessControl\User;
-use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\FrontPage\Application\SubmissionsQuery;
+use App\FrontPage\Infrastructure\DbalSubmissionsQuery;
 use App\Submission\Domain\SubmissionRepository;
 use App\Submission\Infrastructure\DbalSubmissionRepository;
 use App\User\Application\EmailTakenQuery;
 use App\User\Domain\UserRepository;
 use App\User\Infrastructure\DbalEmailTakenQuery;
 use App\User\Infrastructure\DbalUserRepository;
-use Auryn\Injector;
+use DI\Container;
+use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use function DI\create;
+use function DI\factory;
+use function DI\get;
 
-$injector = new Injector();
+$builder = new ContainerBuilder();
 
-//----------
-// Template
-//----------
-$injector->define(TemplateDirectory::class, [':rootDirectory' => ROOT_DIR]);
+$builder->addDefinitions([
+    //----------
+    // Template
+    //----------
+    TemplateDirectory::class => create()->constructor(ROOT_DIR),
 
-$injector->delegate(TemplateRenderer::class, function () use ($injector): TemplateRenderer {
-    $factory = $injector->make(TwigTemplateRendererFactory::class);
+    TemplateRenderer::class => factory(function (Container $c): TemplateRenderer {
+        $factory = $c->get(TwigTemplateRendererFactory::class);
 
-    return $factory->create();
-});
+        return $factory->create();
+    }),
 
-//------------------
-// SubmissionsQuery
-//------------------
-$injector->alias(SubmissionsQuery::class, DbalSubmissionsQuery::class);
+    //------------------
+    // SubmissionsQuery
+    //------------------
+    SubmissionsQuery::class => get(DbalSubmissionsQuery::class),
 
-// Use share() prevent the injector creating a new instance whenever an object is injected
-// The same instance of the object is reused for all classes that use this dependency.
-$injector->share(SubmissionsQuery::class);
+    //----------------------
+    // SubmissionRepository
+    //----------------------
+    SubmissionRepository::class => get(DbalSubmissionRepository::class),
 
-//----------------------
-// SubmissionRepository
-//----------------------
-$injector->alias(SubmissionRepository::class, DbalSubmissionRepository::class);
+    //-----------------------
+    // Database Access Layer
+    //-----------------------
+    DatabaseUrl::class => create()->constructor('sqlite:///' . ROOT_DIR . '/storage/db.sqlite3'),
 
-//-----------------------
-// Database Access Layer
-//-----------------------
-$injector->define(DatabaseUrl::class, [':url' => 'sqlite:///' . ROOT_DIR . '/storage/db.sqlite3']);
+    Connection::class => factory(function (Container $c): Connection {
+        $factory = $c->get(ConnectionFactory::class);
 
-$injector->delegate(Connection::class, function () use ($injector): Connection {
-    $factory = $injector->make(ConnectionFactory::class);
+        return $factory->create();
+    }),
 
-    return $factory->create();
-});
+    //------------
+    // CSRF Token
+    //------------
+    TokenStorage::class    => get(SymfonySessionTokenStorage::class),
+    SessionInterface::class => get(Session::class),
 
-$injector->share(Connection::class);
+    //---------------
+    // Flash Message
+    //---------------
+    FlashMessenger::class => get(SymfonySessionFlashBag::class),
 
-//------------
-// CSRF Token
-//------------
-$injector->alias(TokenStorage::class, SymfonySessionTokenStorage::class);
-$injector->alias(SessionInterface::class, Session::class);
+    //---------------
+    // UserRepository
+    //---------------
+    UserRepository::class  => get(DbalUserRepository::class),
+    EmailTakenQuery::class => get(DbalEmailTakenQuery::class),
 
+    //---------------
+    // User Permission
+    //---------------
+    User::class => factory(function (Container $c): User {
+        $factory = $c->get(SymfonySessionCurrentUserFactory::class);
 
-//---------------
-// Flash Message
-//---------------
-$injector->alias(FlashMessenger::class, SymfonySessionFlashBag::class);
-$injector->share(FlashMessenger::class);
+        return $factory->create();
+    }),
+]);
 
-//---------------
-// UserRepository
-//---------------
-$injector->alias(UserRepository::class, DbalUserRepository::class);
-$injector->alias(EmailTakenQuery::class, DbalEmailTakenQuery::class);
-
-//---------------
-// User Permission
-//---------------
-$injector->delegate(User::class, function () use ($injector) {
-    $factory = $injector->make(SymfonySessionCurrentUserFactory::class);
-    return $factory->create();
-});
-
-return $injector;
+return $builder->build();
