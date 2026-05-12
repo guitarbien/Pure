@@ -23,10 +23,27 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Run unit tests
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist
+      - name: Run unit tests with coverage
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover coverage.xml
+
+      - name: Enforce 90% line coverage
+        run: |
+          php -r "
+          \$xml = simplexml_load_file('coverage.xml');
+          \$metrics = \$xml->project->metrics;
+          \$total = (int)\$metrics['statements'];
+          \$covered = (int)\$metrics['coveredstatements'];
+          if (\$total === 0) { echo 'No statements found in coverage report.\n'; exit(1); }
+          \$pct = \$covered / \$total * 100;
+          printf('Line coverage: %.2f%% (%d/%d)\n', \$pct, \$covered, \$total);
+          if (\$pct < 90) {
+            echo 'FAIL: Coverage is below the 90% threshold.\n';
+            exit(1);
+          }
+          echo 'OK: Coverage meets the 90% requirement.\n';
+          "
