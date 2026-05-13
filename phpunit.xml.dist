@@ -15,5 +15,15 @@
         <include>
             <directory>src</directory>
         </include>
+        <exclude>
+            <file>src/Bootstrap.php</file>
+            <file>src/Dependencies.php</file>
+            <file>src/Routes.php</file>
+            <file>src/Framework/Dbal/ConnectionFactory.php</file>
+            <file>src/FrontPage/Infrastructure/DbalSubmissionsQuery.php</file>
+            <file>src/Submission/Infrastructure/DbalSubmissionRepository.php</file>
+            <file>src/User/Infrastructure/DbalEmailTakenQuery.php</file>
+            <file>src/User/Infrastructure/DbalUserRepository.php</file>
+        </exclude>
     </source>
 </phpunit>
