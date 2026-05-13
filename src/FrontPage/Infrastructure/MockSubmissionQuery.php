@@ -22,9 +22,9 @@ final class MockSubmissionQuery implements SubmissionsQuery
     public function __construct()
     {
         $this->submissions = [
-            new Submission('https://duckduckgo.com', 'DuckDuckGo'),
-            new Submission('https://google.com', 'Google'),
-            new Submission('https://bing.com', 'Bing'),
+            new Submission('https://duckduckgo.com', 'DuckDuckGo', 'Mock Author'),
+            new Submission('https://google.com', 'Google', 'Mock Author'),
+            new Submission('https://bing.com', 'Bing', 'Mock Author'),
         ];
     }
 
