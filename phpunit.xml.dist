@@ -4,7 +4,7 @@
          bootstrap="vendor/autoload.php"
          colors="true">
     <extensions>
-        <extension class="DG\BypassFinals\Extension" />
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension" />
     </extensions>
     <testsuites>
         <testsuite name="Unit">
