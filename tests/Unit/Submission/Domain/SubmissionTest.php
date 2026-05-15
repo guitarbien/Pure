@@ -6,6 +6,7 @@ namespace Tests\Unit\Submission\Domain;
 
 use App\Submission\Domain\AuthorId;
 use App\Submission\Domain\Submission;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -63,7 +64,7 @@ class SubmissionTest extends TestCase
         $this->assertLessThanOrEqual($after->getTimestamp(), $submission->getCreationDate()->getTimestamp());
     }
 
-    /** @dataProvider blankStringProvider */
+    #[DataProvider('blankStringProvider')]
     public function test_submit_allows_blank_url_and_title(string $url, string $title): void
     {
         // domain does NOT validate — validation is caller's responsibility
