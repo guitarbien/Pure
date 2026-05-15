@@ -32,7 +32,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run unit tests with coverage
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover coverage.xml --display-deprecations
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover coverage.xml --display-deprecations 2>&1
 
       - name: Enforce 90% line coverage
         run: |
