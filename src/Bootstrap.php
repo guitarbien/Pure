@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Auryn\Injector;
+use DI\Container;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,6 @@ require ROOT_DIR . '/vendor/autoload.php';
 $request = Symfony\Component\HttpFoundation\Request::createFromGlobals();
 
 // use FastRoute to handle the route
-// Bootstrap is just responsible for showing the response
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $routes = include(ROOT_DIR . '/src/Routes.php');
     foreach ($routes as $route) {
@@ -37,9 +36,9 @@ switch ($routeInfo[0]) {
         [$controllerName, $method] = explode('#', $routeInfo[1]);
         $vars = $routeInfo[2];
 
-        /** @var Injector $injector */
-        $injector   = include(ROOT_DIR . '/src/Dependencies.php');
-        $controller = $injector->make($controllerName);
+        /** @var Container $container */
+        $container  = include(ROOT_DIR . '/src/Dependencies.php');
+        $controller = $container->get($controllerName);
 
         $response = $controller->$method($request, $vars);
         break;

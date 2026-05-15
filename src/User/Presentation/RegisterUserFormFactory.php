@@ -40,9 +40,9 @@ final class RegisterUserFormFactory
         return new RegisterUserForm(
             $this->storedTokenValidator,
             $this->emailTakenQuery,
-            $request->get('token'),
-            $request->get('email'),
-            $request->get('password')
+            (string) ($request->get('token') ?? ''),
+            (string) ($request->get('email') ?? ''),
+            (string) ($request->get('password') ?? '')
         );
     }
 }

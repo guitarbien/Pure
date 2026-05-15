@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+    <extensions>
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension" />
+    </extensions>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+        <exclude>
+            <file>src/Bootstrap.php</file>
+            <file>src/Dependencies.php</file>
+            <file>src/Routes.php</file>
+            <file>src/Framework/Dbal/ConnectionFactory.php</file>
+            <file>src/FrontPage/Infrastructure/DbalSubmissionsQuery.php</file>
+            <file>src/Submission/Infrastructure/DbalSubmissionRepository.php</file>
+            <file>src/User/Infrastructure/DbalEmailTakenQuery.php</file>
+            <file>src/User/Infrastructure/DbalUserRepository.php</file>
+        </exclude>
+    </source>
+</phpunit>

@@ -8,19 +8,10 @@ use App\FrontPage\Application\Submission;
 use App\FrontPage\Application\SubmissionsQuery;
 use Doctrine\DBAL\Connection;
 
-/**
- * Class DbalSubmissionsQuery
- * @package App\FrontPage\Infrastructure
- */
 final class DbalSubmissionsQuery implements SubmissionsQuery
 {
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * DbalSubmissionsQuery constructor.
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -40,13 +31,12 @@ final class DbalSubmissionsQuery implements SubmissionsQuery
         $queryBuilder->join('submissions', 'users', 'authors', 'submissions.author_user_id = authors.id');
         $queryBuilder->orderBy('submissions.creation_date', 'DESC');
 
-        $stmt = $queryBuilder->execute();
-        $rows = $stmt->fetchAll();
+        $rows = $queryBuilder->executeQuery()->fetchAllAssociative();
 
         /** @var Submission[] $submissions */
         $submissions = [];
         foreach ($rows as $row) {
-            $submissions[] = new Submission($row['url'], $row['title'],  $row['email']);
+            $submissions[] = new Submission($row['url'], $row['title'], $row['email']);
         }
 
         return $submissions;
