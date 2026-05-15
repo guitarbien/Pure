@@ -80,9 +80,9 @@ class LoginControllerTest extends TestCase
     public function test_login_redirects_when_handler_does_not_set_user_id(): void
     {
         $this->validator->method('validate')->willReturn(true);
-        $this->handler->method('handle')->will($this->returnCallback(function () {
+        $this->handler->method('handle')->willReturnCallback(function () {
             // handler does not set userId in session
-        }));
+        });
 
         $this->messenger->expects($this->once())
             ->method('add')
@@ -101,9 +101,9 @@ class LoginControllerTest extends TestCase
     public function test_login_succeeds_and_redirects_to_home(): void
     {
         $this->validator->method('validate')->willReturn(true);
-        $this->handler->method('handle')->will($this->returnCallback(function () use (&$session) {
+        $this->handler->method('handle')->willReturnCallback(function () use (&$session) {
             // handler sets userId
-        }));
+        });
 
         $this->messenger->expects($this->once())
             ->method('add')
@@ -117,9 +117,9 @@ class LoginControllerTest extends TestCase
         $controller = new LoginController($this->renderer, $this->validator, $this->messenger, $this->handler, $session);
 
         // simulate handler setting the userId
-        $this->handler->expects($this->once())->method('handle')->will($this->returnCallback(function () use ($session) {
+        $this->handler->expects($this->once())->method('handle')->willReturnCallback(function () use ($session) {
             $session->set('userId', 'user-123');
-        }));
+        });
 
         $response = $controller->logIn($request);
 
