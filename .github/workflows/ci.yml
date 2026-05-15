@@ -32,7 +32,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Run unit tests with coverage
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover coverage.xml --log-junit junit.xml 2>&1 ; echo "===JUNIT===" ; cat junit.xml | grep -i "deprecat\|testcase name" | head -30
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-clover coverage.xml --log-junit junit.xml 2>&1 ; echo "===JUNIT===" ; grep -v "testcase name" junit.xml | head -50
 
       - name: Enforce 90% line coverage
         run: |
