@@ -9,10 +9,12 @@ use App\Framework\Rendering\TemplateRenderer;
 use App\Framework\RoleBasedAccessControl\AuthenticatedUser;
 use App\Framework\RoleBasedAccessControl\Guest;
 use App\Framework\RoleBasedAccessControl\Permission\SubmitLink;
+use App\Framework\RoleBasedAccessControl\User;
 use App\Submission\Application\SubmitLinkHandler;
 use App\Submission\Presentation\SubmissionController;
 use App\Submission\Presentation\SubmissionForm;
 use App\Submission\Presentation\SubmissionFormFactory;
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -133,5 +135,23 @@ class SubmissionControllerTest extends TestCase
         $response = $controller->submit($request);
 
         $this->assertSame('/submit', $response->getTargetUrl());
+    }
+
+    public function test_submit_throws_logic_exception_when_user_has_permission_but_is_not_authenticated_user(): void
+    {
+        // User implements the User interface with permission but is NOT an AuthenticatedUser instance
+        $user = $this->createMock(User::class);
+        $user->method('hasPermission')->willReturn(true);
+
+        $form = $this->createMock(SubmissionForm::class);
+        $form->method('getValidationErrors')->willReturn([]);
+        $this->factory->method('createFromRequest')->willReturn($form);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Only authenticated users can submit links');
+
+        $request = new Request();
+        $controller = new SubmissionController($this->renderer, $this->factory, $this->messenger, $this->handler, $user);
+        $controller->submit($request);
     }
 }

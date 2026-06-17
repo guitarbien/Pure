@@ -2,3 +2,4 @@
 vendor
 db.sqlite3
 .phpunit.result.cache
+php-bin
